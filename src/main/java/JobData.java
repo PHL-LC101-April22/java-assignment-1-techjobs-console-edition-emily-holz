@@ -8,6 +8,7 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.List;
 
 /**
@@ -75,9 +76,14 @@ public class JobData {
 
         ArrayList<HashMap<String, String>> jobs = new ArrayList<>();
 
+
+        /*loops through all the rows and searches only a specific
+        column of each row with an if statement. if it contains the search
+        term, the entire row is returned in the results*/
+
         for (HashMap<String, String> row : allJobs) {
 
-            String aValue = row.get(column);
+            String aValue = row.get(column).toLowerCase();
 
             if (aValue.contains(value)) {
                 jobs.add(row);
@@ -95,11 +101,27 @@ public class JobData {
      */
     public static ArrayList<HashMap<String, String>> findByValue(String value) {
 
-        // load data, if not already loaded
+        /*need to loop through all the rows and THEN loop through each column.
+        * if the search term is discovered, return the whole row to the results
+        * and then move to the next row.*/
+
+        //load data, if not already loaded
+
         loadData();
 
         // TODO - implement this method
-        return null;
+        ArrayList<HashMap<String, String>> jobs = new ArrayList<>();
+
+        for (HashMap<String,String> row : allJobs){
+            for (Map.Entry<String, String> column : row.entrySet()){
+                if (column.getValue().toLowerCase().contains(value) && !jobs.contains(row)){
+                    jobs.add(row);
+                }
+            }
+        }
+
+
+        return jobs;
     }
 
     /**
